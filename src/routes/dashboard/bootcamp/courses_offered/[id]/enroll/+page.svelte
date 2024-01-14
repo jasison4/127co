@@ -8,7 +8,7 @@
     let editedEnrollmentID: any;
     let employeeID: any;
     let selectedName: any = '';
-    let currentDate: string = new Date().toISOString().split("T")[0];
+    let currentDate: string = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().split("T")[0];
     let editedDateStarted = currentDate;
     let names = employeeNames.map((employeeNames) => employeeNames.names)
     let enrolled = new Map<string, string>();
@@ -16,7 +16,7 @@
     enrollees.forEach(enrollee => {
       enrolled.set(
       enrollee.Employee_ID, 
-      new Date(enrollee.Start_Date).toISOString().split("T")[0]
+      new Date(new Date(enrollee.Start_Date).getTime() - (new Date(enrollee.Start_Date).getTimezoneOffset() * 60000)).toISOString().split("T")[0]
     );});
 
     function getEmployeeID(selectedName: string): string {
@@ -104,7 +104,7 @@
         style="margin-bottom: 10px;"
         required
         >
-      <label for="s">{editedDateStarted}, {getEmployeeID(selectedName)}, {isEnrolled(getEmployeeID(selectedName),editedDateStarted)}</label>
+      <!-- <label for="s">{editedDateStarted}, {getEmployeeID(selectedName)}, {isEnrolled(getEmployeeID(selectedName),editedDateStarted)}</label> -->
 
       <br>
       {#if !isEnrolled(getEmployeeID(selectedName),editedDateStarted)}

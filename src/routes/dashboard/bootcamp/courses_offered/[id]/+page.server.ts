@@ -41,10 +41,14 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
   // Fetch remaining slots for the course
   const [slots] = await db.execute<RowDataPacket[]>(
     `SELECT
-    co.Course_Capacity - COUNT(*) AS slots
-    FROM Course_Enrolled ce
-    INNER JOIN Course_Offered co ON ce.Course_ID = co.Course_ID
+      CASE
+        WHEN COUNT(ce.Course_ID) IS NULL THEN co.Course_Capacity
+        ELSE co.Course_Capacity - COUNT(ce.Course_ID)
+      END AS slots
+    FROM Course_Offered co
+    LEFT JOIN Course_Enrolled ce ON co.Course_ID = ce.Course_ID AND ce.End_Date IS NULL
     WHERE co.Course_ID = "${courseID}"`
+    // count only the enrolled students that have not yet finished the course
   );
 
   // Fetch certificate data

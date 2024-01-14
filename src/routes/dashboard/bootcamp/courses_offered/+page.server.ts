@@ -16,8 +16,9 @@ export const load: PageServerLoad = async ({ cookies }) => {
     LEFT JOIN (
       SELECT Course_ID, COUNT(*) as enrolled_count 
       FROM Course_Enrolled 
+      WHERE End_Date IS NULL
       GROUP BY Course_ID
-    ) ce ON co.Course_ID = ce.Course_ID`  );
+    ) ce ON co.Course_ID = ce.Course_ID` );
 
 
   return {

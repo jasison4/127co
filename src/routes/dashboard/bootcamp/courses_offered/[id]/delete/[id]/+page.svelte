@@ -1,7 +1,7 @@
 <script lang="ts">
   import Breadcrumb from "$lib/components/Breadcrumb.svelte";
   import { Hr } from "flowbite-svelte";
-  import type { PageData } from "../../folde/$types";
+  import type { PageData } from "./$types";
   export let data: PageData;
   const { enrollees } = data;
   

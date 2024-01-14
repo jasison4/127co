@@ -28,11 +28,13 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
   );
 
   const [slots] = await db.execute<RowDataPacket[]>(
-    
-    `SELECT 
-    co.Course_Capacity - IFNULL(COUNT(ce.Course_ID), 0) AS slots
-    FROM Course_Offered co 
-    LEFT JOIN Course_Enrolled ce ON co.Course_ID = ce.Course_ID
+    `SELECT
+      CASE
+        WHEN COUNT(ce.Course_ID) IS NULL THEN co.Course_Capacity
+        ELSE co.Course_Capacity - COUNT(ce.Course_ID)
+      END AS slots
+    FROM Course_Offered co
+    LEFT JOIN Course_Enrolled ce ON co.Course_ID = ce.Course_ID AND ce.End_Date IS NULL
     WHERE co.Course_ID = "${courseID}"`
   );
 

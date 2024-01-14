@@ -4,11 +4,23 @@
   import Menu from "$lib/components/Menu.svelte";
   export let data: PageServerData;
 
-  let filtered_proj = data.projects;
-  let show_add = true;
+  let filtered_course = data.Courses;
   let query: string = "";
   let selected_type: string = "";
-  let selected_status: string = "";
+
+  $: if (query || selected_type) {
+    filtered_course = data.Courses.filter(
+      (course: any) =>
+        (course.Course_Name.toLowerCase().includes(query.toLowerCase())
+          || course.Course_Category.toLowerCase().includes(query.toLowerCase())
+          )
+          && (!selected_type || course.Course_Category.toLowerCase() === selected_type.toLowerCase())
+    )
+  } else {
+    filtered_course = data.Courses;
+  }
+
+
 
 </script>
 
@@ -55,7 +67,7 @@
       <span class="text-3xl material-symbols-outlined mr-2"> add </span>
       Add a new Course
     </a>
-    {#each data.Courses as course}
+    {#each filtered_course as course}
       <a href="/dashboard/bootcamp/courses_offered/{course.Course_ID}"
         class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 flex flex-col justify-between"
       >

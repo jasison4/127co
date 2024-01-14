@@ -12,7 +12,6 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
   const [courses] = await db.execute<RowDataPacket[]>(
     `SELECT * 
     FROM Course_Offered co
-    INNER JOIN Course_Enrolled ce ON co.Course_ID = ce.Course_ID
     WHERE co.Course_ID = '${course_ID}'`
   );
 

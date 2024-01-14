@@ -57,8 +57,8 @@
      courseSched2 = convertTo24Hour(courseSched2);
      courseSched3 = convertTo24Hour(courseSched3);
     $: newcourseID = generateCourseID(courseName);
-    $: courseSched2Formatted = new Date(`1970-01-01T${courseSched2}:00`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    $: courseSched3Formatted = new Date(`1970-01-01T${courseSched3}:00`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    $: courseSched2Formatted = new Date(`1970-01-01T${courseSched2}Z`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
+    $: courseSched3Formatted = new Date(`1970-01-01T${courseSched3}Z`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
     $: courseSchedule = courseSched1 + " " + courseSched2Formatted + " - " + courseSched3Formatted;
     $: courseDuration = courseDur + (courseDur === 1 ? " month" : " months") + " (6 hours/week)";
 </script>

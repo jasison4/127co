@@ -3,8 +3,13 @@
   import type { PageData } from "./$types";
   export let data: PageData;
 
+  
   // Extract course and employee data from the page data
   const { course, Enrollments, Certificates, remainingSlots } = data;
+  
+  let currentEnrollments = Enrollments.filter((enrollment) => enrollment.End_Date == null);
+  let pastEnrollments = Enrollments.filter((enrollment) => enrollment.End_Date !== null);
+
 
   // Function to format date to display only date part
   const formatDate = (dateString: string) => {
@@ -22,15 +27,8 @@
     window.location.href = `/dashboard/bootcamp/courses_offered/${course.Course_ID}/delete/${enrollmentID}`;
   };
 
-  // Function to handle clicking on the edit button for certificates
-  const handleEditCertificate = (certificateID) => {
-    // Add the logic to handle editing certificates
-  };
 
-  // Function to handle clicking on the delete button for certificates
-  const handleDeleteCertificate = (certificateID) => {
-    // Add the logic to handle deleting certificates
-  };
+
 </script>
 
 <main class="w-full">
@@ -58,11 +56,11 @@
     <!-- Add more course details columns if needed -->
   </div>
 
-  <!-- Display enrolled students data in a table -->
-  {#if Enrollments && Enrollments.length > 0}
+  <!-- Display currently enrolled students data in a table -->
+  {#if currentEnrollments && currentEnrollments.length > 0}
     <!-- Enrollments Section -->
     <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h2 class="text-2xl font-bold mt-6 mb-2">Enrolled Students</h2>
+      <h2 class="text-2xl font-bold mt-6 mb-2">Currently Enrolled Students</h2>
       <a href="/dashboard/bootcamp/courses_offered/{course.Course_ID}/enroll" class="w-1/6 mr-12">
         {#if remainingSlots.slots > 0}
           <button on:click|stopPropagation class=" w-full">Enroll</button>
@@ -85,7 +83,7 @@
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          {#each Enrollments as enrollment (enrollment.Enrollment_ID)}
+          {#each currentEnrollments as enrollment (enrollment.Enrollment_ID)}
             <tr>
               <td class="py-2">{enrollment.Enrollment_ID}</td>
               <td class="py-2">{enrollment.Name}</td>
@@ -103,8 +101,50 @@
       </table>
     </div>
   {:else}
-    <p class="mt-6">No enrolled students found for this course.</p>
+    <p class="mt-6">No currently enrolled students found for this course.</p>
   {/if}
+
+    <!-- Display past enrolled students data in a table -->
+    {#if pastEnrollments && pastEnrollments.length > 0}
+    <!-- Enrollments Section -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2 class="text-2xl font-bold mt-6 mb-2">Past Enrolled Students</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 text-center">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="py-2">Enrollment ID</th>
+            <th class="py-2">Name</th>
+            <th class="py-2">Start Date</th>
+            <th class="py-2">End Date</th>
+            <th class="py-2">Grade</th>
+            <th class="py-2">Actions</th>
+            <!-- Add more columns as needed -->
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {#each pastEnrollments as enrollment (enrollment.Enrollment_ID)}
+            <tr>
+              <td class="py-2">{enrollment.Enrollment_ID}</td>
+              <td class="py-2">{enrollment.Name}</td>
+              <td class="py-2">{formatDate(enrollment.Start_Date)}</td>
+              <td class="py-2">{enrollment.End_Date ? formatDate(enrollment.End_Date) : "Not Yet Finished"}</td>
+              <td class="py-2">{enrollment.Grade ? enrollment.Grade : "Not Yet Graded"}</td>
+              <td class="py-2">
+                <!-- Add edit and delete buttons for enrollments -->
+                <button class="px-4 py-2 mr-2 bg-blue-500 text-white rounded" on:click={() => handleEditEnrollment(enrollment.Enrollment_ID)}>Edit</button>
+                <button class="px-4 py-2 bg-red-500 text-white rounded" on:click={() => handleDeleteEnrollment(enrollment.Enrollment_ID)}>Delete</button>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  {:else}
+    <p class="mt-6">No past enrolled students found for this course.</p>
+  {/if}
+
 
   <!-- Display certificates data in a table -->
   {#if Certificates && Certificates.length > 0}

@@ -41,67 +41,74 @@
         name="enrollmentID"
         value={editedEnrollmentID}
         style="margin-bottom: 10px;" 
-        disabled>
+          disabled>
 
-      <br>
-      <label for="firstName">First Name:</label>
-      <br>
-      <input 
-        class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
-        type="text" 
-        id="firstName" 
-        name="firstName"
-        value={editedFirstName}
-        style="margin-bottom: 10px;">
+        <br>
+        <label for="firstName">First Name:</label>
+        <br>
+        <input 
+          class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
+          type="text" 
+          id="firstName" 
+          name="firstName"
+          value={editedFirstName}
+          style="margin-bottom: 10px;"
+          required>
 
-      <br>
-      <label for="lastName">Last Name:</label>
-      <br>
-      <input 
-        class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
-        type="text" 
-        id="lastName" 
-        name="lastName"
-        value={editedLastName}
-        style="margin-bottom: 10px;">
+        <br>
+        <label for="lastName">Last Name:</label>
+        <br>
+        <input 
+          class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
+          type="text" 
+          id="lastName" 
+          name="lastName"
+          value={editedLastName}
+          style="margin-bottom: 10px;"
+          required>
 
-      <br>
-      <label for="dateStarted">Date Started:</label>
-      <br>
-      <input 
-        class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
-        type="date" 
-        id="dateStarted" 
-        name="dateStarted"
-        value={editedDateStarted.toISOString().split("T")[0]}
-        style="margin-bottom: 10px;">
+        <br>
+        <label for="dateStarted">Date Started:</label>
+        <br>
+        <input 
+          class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
+          type="date" 
+          id="dateStarted" 
+          name="dateStarted"
+          value={new Date(editedDateStarted.getTime() - (editedDateStarted.getTimezoneOffset() * 60000)).toISOString().split("T")[0]}
+          style="margin-bottom: 10px;"
+          required>
 
-      <br>
-      <label for="dateFinishes">Date Finishes:</label>
-      <br>
-      <input 
-        class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
-        type="date" 
-        id="dateFinished" 
-        name="dateFinished"
-        value={editedDateFinishes ? editedDateFinishes.toISOString().split("T")[0] : ''}
-        placeholder="mm/dd/yyyy"
-        style="margin-bottom: 10px;">
+        <br>
+        <label for="dateFinishes">Date Finishes:</label>
+        <br>
+        <input 
+          class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
+          type="date" 
+          id="dateFinished" 
+          name="dateFinished"
+          value={editedDateFinishes ? new Date(editedDateFinishes.getTime() - (editedDateFinishes.getTimezoneOffset() * 60000)).toISOString().split("T")[0] : ''}
+          placeholder="mm/dd/yyyy"
+          style="margin-bottom: 10px;"
+          required>
 
-      <br>
-      <label for="grade">Grade:</label>
-      <br>
-      <input 
-        class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
-        type="text" 
-        id="grade" 
-        name="grade"
-        value={editedGrade}
-        style="margin-bottom: 10px;">
+        <br>
+        <label for="grade">Grade:</label>
+        <br>
+        <input 
+          class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
+          type="text" 
+          id="grade" 
+          name="grade"
+          value={editedGrade}
+          style="margin-bottom: 10px;"
+          required>
 
       <br>
       <button type="submit">Save Changes</button>
       <a href="/dashboard/bootcamp/courses_offered/{enrollees.Course_ID}">Cancel</a>
+
+
       </form>
 
 </main>
