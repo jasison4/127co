@@ -77,6 +77,7 @@
         id="Name"
         name="Name"
         bind:value={selectedName}
+        required
         
         style="margin-bottom: 10px;"
       >
@@ -100,7 +101,9 @@
         name="dateStarted"
         placeholder={currentDate}
         bind:value={editedDateStarted}
-        style="margin-bottom: 10px;">
+        style="margin-bottom: 10px;"
+        required
+        >
       <label for="s">{editedDateStarted}, {getEmployeeID(selectedName)}, {isEnrolled(getEmployeeID(selectedName),editedDateStarted)}</label>
 
       <br>
