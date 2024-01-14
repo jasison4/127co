@@ -1,8 +1,10 @@
+// Import necessary modules and types
 import db from "$lib/server/database";
 import type { RowDataPacket } from "mysql2";
 import type { PageServerLoad } from "./$types";
 import { redirect } from "@sveltejs/kit";
 
+// Define the load function
 export const load: PageServerLoad = async ({ cookies, params }) => {
   const courseID = params.id;
 
@@ -13,11 +15,12 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
      INNER JOIN Instructor ON Course_Offered.Course_ID = Instructor.Course_ID
      INNER JOIN Employee ON Instructor.Employee_Id = Employee.Employee_Id
      WHERE Course_Offered.Course_ID = "${courseID}"`
-    
   );
 
+  // If the course is not found, redirect to the bootcamp page
   if (courseResult.length === 0) throw redirect(302, "/dashboard/bootcamp");
 
+  // Extract course details from the result
   const course = courseResult[0];
 
   // Fetch enrolled students data with names
@@ -35,23 +38,37 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
      WHERE co.Course_ID = "${courseID}"`
   );
 
+  // Fetch remaining slots for the course
   const [slots] = await db.execute<RowDataPacket[]>(
-    
-    `SELECT 
-    co.Course_Capacity - IFNULL(COUNT(ce.Course_ID), 0) AS slots
-    FROM Course_Offered co 
-    LEFT JOIN Course_Enrolled ce ON co.Course_ID = ce.Course_ID
+    `SELECT
+    co.Course_Capacity - COUNT(*) AS slots
+    FROM Course_Enrolled ce
+    INNER JOIN Course_Offered co ON ce.Course_ID = co.Course_ID
     WHERE co.Course_ID = "${courseID}"`
   );
 
-  // Employee names
+  // Fetch certificate data
+  const [certificateResult] = await db.execute<RowDataPacket[]>(
+    `SELECT
+       c.Certificate_ID,
+       c.Employee_ID,
+       c.Course_ID,
+       c.Release_Date,
+       CONCAT(e.Employee_LastName, ', ', e.Employee_FirstName) AS EmployeeName
+    FROM Certificate c
+    INNER JOIN Employee e ON c.Employee_ID = e.Employee_ID
+    WHERE c.Course_ID = "${courseID}"`
+  );
+
+  // Extract data from the results
   const enrollments = enrollmentResult || [];
   const remainingSlots = slots[0];
 
-  
+  // Return the data to be used in the Svelte component
   return {
     course,
     Enrollments: enrollments,
-    remainingSlots
+    remainingSlots,
+    Certificates: certificateResult
   };
 };
