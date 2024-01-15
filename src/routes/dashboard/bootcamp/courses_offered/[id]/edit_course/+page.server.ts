@@ -25,14 +25,19 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
     `SELECT Course_ID FROM Course_Offered`
   );
 
+  const [countenrollees] = await db.execute<RowDataPacket[]>(
+    `SELECT COUNT(*) AS count FROM Course_Enrolled WHERE Course_ID = "${courseID}"`
+  );
+
   const course = courses[0];
   const employeeNames = instructors;
   const courseIDs = listcourseID;
+  const enrollees = countenrollees[0];
   
   console.log(course);
 
 return { 
-  course, employeeNames, courseIDs
+  course, employeeNames, courseIDs, enrollees
   };  
 
 

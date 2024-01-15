@@ -35,7 +35,7 @@ export const actions = {
       `DELETE FROM Course_Enrolled WHERE Course_ID = '${params.id}'`
        );
     
-    
+      
     console.log(course_deleted);
     console.log(enrollment_deleted);
     throw redirect(302, `/dashboard/bootcamp/courses_offered`);  

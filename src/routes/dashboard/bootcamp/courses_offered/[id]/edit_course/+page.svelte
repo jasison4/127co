@@ -3,7 +3,7 @@
     import type { PageServerData } from "./$types";
     import Menu from "$lib/components/Menu.svelte";
     export let data: PageServerData;
-    const { course, employeeNames, courseIDs } = data;
+    const { course, employeeNames, courseIDs, enrollees } = data;
     let courseIDMap = courseIDs.map((courseIDs) => courseIDs.Course_ID)
     let names = employeeNames.map((employeeNames) => employeeNames.names)
    
@@ -221,12 +221,14 @@
                 </a>
             </div>
 
-            <a href="/dashboard/bootcamp/courses_offered/{course.Course_ID}/delete_course" class="mr-20">
-                <button type="button">
-                    <span class="material-symbols-outlined">delete</span>
-                    Delete Course
-                </button>
-            </a>
+            {#if enrollees.count === 0}
+                <a href="/dashboard/bootcamp/courses_offered/{course.Course_ID}/delete_course" class="mr-20">
+                    <button type="button">
+                        <span class="material-symbols-outlined">delete</span>
+                        Delete Course
+                    </button>
+                </a>
+            {/if}
         </div>
 
     </form>
