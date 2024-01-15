@@ -5,7 +5,7 @@
 
   
   // Extract course and employee data from the page data
-  const { course, Enrollments, Certificates, remainingSlots } = data;
+  const { course, Enrollments, Certificates, remainingSlots, noCertificateCount } = data;
   
   let currentEnrollments = Enrollments.filter((enrollment) => enrollment.End_Date == null);
   let pastEnrollments = Enrollments.filter((enrollment) => enrollment.End_Date !== null);
@@ -27,7 +27,7 @@
     window.location.href = `/dashboard/bootcamp/courses_offered/${course.Course_ID}/delete/${enrollmentID}`;
   };
 
-
+  
 
 </script>
 
@@ -101,7 +101,17 @@
       </table>
     </div>
   {:else}
-    <p class="mt-6">No currently enrolled students found for this course.</p>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <p>No currently enrolled students</p>
+    <a href="/dashboard/bootcamp/courses_offered/{course.Course_ID}/enroll" class="w-1/6 mr-12">
+      {#if remainingSlots.slots > 0}
+        <button on:click|stopPropagation class=" w-full">Enroll</button>
+      {:else}
+        <button disabled style="background-color: gray;" class="mt-2 mb-6 w-full">No More Slots</button>
+      {/if}
+    </a>
+  </div>
+    
   {/if}
 
     <!-- Display past enrolled students data in a table -->
@@ -151,6 +161,14 @@
     <!-- Certificates Section -->
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <h2 class="text-2xl font-bold mt-6 mb-2">Certificates</h2>
+      <a href="/dashboard/bootcamp/courses_offered/{course.Course_ID}/generate_cert" class="w-1/5 mr-10 ">
+        {#if noCertificateCount.count > 0}
+          <button on:click|stopPropagation class=" w-full">Generate Certificates</button>
+        {:else}
+          <button disabled style="background-color: gray;" class="mt-2 mb-6 w-full">None to generate</button>
+        {/if}
+      </a>
+
     </div>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200 text-center">

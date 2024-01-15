@@ -97,7 +97,8 @@
         <br>
         <input 
           class="text-sm border-2 rounded-full border-gray-400 p-1 pl-2 pr-2"
-          type="text" 
+          type="number" 
+          min="60"
           id="grade" 
           name="grade"
           value={editedGrade}

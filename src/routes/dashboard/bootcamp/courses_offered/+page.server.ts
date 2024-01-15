@@ -21,11 +21,26 @@ export const load: PageServerLoad = async ({ cookies }) => {
     ) ce ON co.Course_ID = ce.Course_ID` );
 
 
+  //test function to call on client side
+
+
   return {
-    Courses,
+    Courses
   };
+
+  
+
+
 };
 
 export const actions = {
-  search: async ({ request }) => {},
+  search: async ({ request, params }) => {
+    const data = await request.formData();
+
+    console.log("searching");
+
+
+  },
 } satisfies Actions;
+
+

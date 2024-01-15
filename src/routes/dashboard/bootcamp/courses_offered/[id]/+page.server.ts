@@ -35,7 +35,9 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
      FROM Course_Enrolled ce
      INNER JOIN Course_Offered co ON ce.Course_ID = co.Course_ID
      INNER JOIN Employee e ON ce.Employee_ID = e.Employee_ID
-     WHERE co.Course_ID = "${courseID}"`
+     WHERE co.Course_ID = "${courseID}"
+     ORDER BY ce.Start_Date DESC
+     `
   );
 
   // Fetch remaining slots for the course
@@ -63,16 +65,32 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
     INNER JOIN Employee e ON c.Employee_ID = e.Employee_ID
     WHERE c.Course_ID = "${courseID}"`
   );
+  
+  // Count students who have completed the course but have no certificate
+  const [noCertificateResult] = await db.execute<RowDataPacket[]>(
+    `SELECT COUNT(*) as count
+    FROM Course_Enrolled ce
+    LEFT JOIN Certificate c ON ce.Employee_ID = c.Employee_ID AND ce.Course_ID = c.Course_ID
+    WHERE ce.Course_ID = '${courseID}'
+    AND ce.End_Date IS NOT NULL
+    AND ce.Grade IS NOT NULL
+    AND c.Certificate_ID IS NULL`
+  );
+
+    
 
   // Extract data from the results
   const enrollments = enrollmentResult || [];
   const remainingSlots = slots[0];
+  const noCertificateCount = noCertificateResult[0];
 
   // Return the data to be used in the Svelte component
   return {
     course,
     Enrollments: enrollments,
-    remainingSlots,
+    remainingSlots, noCertificateCount,
     Certificates: certificateResult
   };
 };
+
+
